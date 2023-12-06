@@ -1,0 +1,32 @@
+<!-- views/updatestats.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Statistics</title>
+</head>
+<body>
+    <h1>Update Statistics</h1>
+    
+    <form action="/updatestats" method="post">
+        <label for="team">Select Team:</label>
+        <select name="team" id="team">
+            <option value="Team1">Team 1</option>
+            <option value="Team2">Team 2</option>
+            <option value="Team3">Team 3</option>
+            <!-- Add more teams as needed -->
+        </select>
+
+        <br>
+
+        <label for="score">Enter Score:</label>
+        <input type="number" name="score" id="score" required>
+
+        <br>
+
+        <button type="submit">Update Statistics</button>
+    </form>
+</body>
+</html>
