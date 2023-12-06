@@ -13,6 +13,13 @@ const server = http.createServer(app);
 // Create a Primus instance and integrate it with the server
 const primus = new Primus(server, { transformer: 'websockets' });
 
+// Example data (replace this with your actual data-fetching logic)
+const teams = [
+    { name: "Team1", score: 100 },
+    { name: "Team2", score: 150 },
+    { name: "Team3", score: 120 },
+];
+
 // Handle WebSocket connections
 primus.on('connection', (spark) => {
     console.log('Client connected via WebSocket');
@@ -37,9 +44,8 @@ app.get('/updatestats', (req, res) => {
 });
 
 // Route for rendering the stats view
-app.get('/', (req, res) => {
-    // For now, let's just send a placeholder message
-    res.send('<h1>Statistics will be displayed here</h1>');
+app.get('/stats', (req, res) => {
+    res.render('stats', { teams });
 });
 
 // Your other routes...
