@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Update the server URL accordingly
-    const socket = new Primus('https://dev5-lab6-brendvandeneyndes-projects.vercel.app/');
+    const socket = new Primus('wss://dev5-lab6-git-main-brendvandeneyndes-projects.vercel.app/primus');
+
 
 
     // Handle incoming updates from the server
