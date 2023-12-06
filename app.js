@@ -44,14 +44,22 @@ primus.on('connection', (spark) => {
 });
 
 // Route for rendering the updatestats form
-app.get('/updatestats', (req, res) => {
+app.get('/updatestats', (_, res) => {
     res.render('updatestats');
 });
 
 // Route for rendering the stats view
-app.get('/stats', (req, res) => {
+app.get('/stats', (_, res) => {
     res.render('stats', { teams });
 });
+
+// Route for rendering the home page
+app.get('/', (_, res) => {
+    res.render('stats', { teams });
+});
+
+
+
 
 // Your other routes...
 
