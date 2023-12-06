@@ -1,9 +1,35 @@
 // app.js
 
 const express = require('express');
+const http = require('http');
+const Primus = require('primus');
 const app = express();
+const server = http.createServer(app);
 
 // Set up your other middleware and configurations
+
+// Your other routes...
+
+// Create a Primus instance and integrate it with the server
+const primus = new Primus(server, { transformer: 'websockets' });
+
+// Handle WebSocket connections
+primus.on('connection', (spark) => {
+    console.log('Client connected via WebSocket');
+
+    // Handle incoming data from clients
+    spark.on('data', (data) => {
+        console.log('Received data from client:', data);
+
+        // Broadcast the data to all connected clients
+        primus.write(data);
+    });
+
+    // Handle disconnections
+    spark.on('end', () => {
+        console.log('Client disconnected');
+    });
+});
 
 // Route for rendering the updatestats form
 app.get('/updatestats', (req, res) => {
@@ -20,6 +46,6 @@ app.get('/', (req, res) => {
 
 // Start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
