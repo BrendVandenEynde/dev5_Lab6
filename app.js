@@ -3,12 +3,17 @@
 const express = require('express');
 const http = require('http');
 const Primus = require('primus');
+const path = require('path');
+
 const app = express();
 const server = http.createServer(app);
 
-// Set up your other middleware and configurations
+// Set the view engine to EJS
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// Your other routes...
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Create a Primus instance and integrate it with the server
 const primus = new Primus(server, { transformer: 'websockets' });
