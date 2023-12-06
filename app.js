@@ -29,16 +29,42 @@ const teams = [
     { name: "Team3", score: 120 },
 ];
 
+// Function to broadcast updates to all connected clients
+function broadcastUpdates() {
+    primus.write({ event: 'updateStats', teams });
+}
+
 // Handle WebSocket connections
 primus.on('connection', (spark) => {
     console.log('Client connected via WebSocket');
+
+    // Send the initial teams data to the newly connected client
+    spark.write({ event: 'updateStats', teams });
 
     // Handle incoming data from clients
     spark.on('data', (data) => {
         console.log('Received data from client:', data);
 
-        // Broadcast the data to all connected clients
-        primus.write(data);
+        // Handle form submissions
+        if (data.event === 'updateStats') {
+            const { team, score } = data.payload;
+            console.log(`Received form submission - Team: ${team}, Score: ${score}`);
+
+            // Update the scores in the teams array
+            const foundTeam = teams.find(t => t.name === team);
+            if (foundTeam) {
+                foundTeam.score = parseInt(score, 10); // Parse the score as an integer
+                console.log(`Updated team - ${team}: ${foundTeam.score}`);
+
+                // Broadcast the updated teams to all connected clients
+                broadcastUpdates();
+            } else {
+                console.log(`Team not found - ${team}`);
+            }
+
+            // Log the updated teams array
+            console.log('Updated teams:', teams);
+        }
     });
 
     // Handle disconnections
@@ -53,7 +79,6 @@ app.get('/updatestats', (_, res) => {
 });
 
 // Route for handling the form submission
-// Route for handling the form submission
 app.post('/updatestats', (req, res) => {
     // Handle the form data here
     const { team, score } = req.body;
@@ -66,7 +91,7 @@ app.post('/updatestats', (req, res) => {
         console.log(`Updated team - ${team}: ${foundTeam.score}`);
 
         // Broadcast the updated teams to all connected clients
-        primus.write({ event: 'updateStats', teams });
+        broadcastUpdates();
     } else {
         console.log(`Team not found - ${team}`);
     }
@@ -77,20 +102,6 @@ app.post('/updatestats', (req, res) => {
     // Redirect back to the updatestats page or any other page
     res.redirect('/updatestats');
 });
-
-// Handle WebSocket connections
-primus.on('connection', (spark) => {
-    console.log('Client connected via WebSocket');
-
-    // Send the initial teams data to the newly connected client
-    spark.write({ event: 'updateStats', teams });
-
-    // Handle disconnections
-    spark.on('end', () => {
-        console.log('Client disconnected');
-    });
-});
-
 
 // Route for rendering the stats view
 app.get('/stats', (_, res) => {

@@ -10,10 +10,29 @@
 <body>
     <h1>Statistics for Teams</h1>
     
-    <ul>
+    <ul id="teamsList">
         <% teams.forEach(team => { %>
-            <li><%= team.name %>: <%= team.score %></li>
+            <li id="<%= team.name %>"><%= team.name %>: <span class="score"><%= team.score %></span></li>
         <% }); %>
     </ul>
+
+    <script src="/primus/primus.js"></script>
+    <script>
+        // Connect to the WebSocket server
+        const primus = new Primus();
+
+        // Handle updates received from the server
+        primus.on('data', (data) => {
+            if (data.event === 'updateStats') {
+                // Update the scores in the UI
+                data.teams.forEach(updatedTeam => {
+                    const teamElement = document.getElementById(updatedTeam.name);
+                    if (teamElement) {
+                        teamElement.querySelector('.score').innerText = updatedTeam.score;
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

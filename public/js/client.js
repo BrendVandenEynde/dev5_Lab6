@@ -1,10 +1,8 @@
 // public/js/client.js
 
 document.addEventListener('DOMContentLoaded', function () {
-    const primus = new Primus();
-
     // Set up WebSocket connection to the server
-    const socket = primus.connect();
+    const socket = new Primus();
 
     // Handle incoming updates from the server
     socket.on('data', function (data) {
