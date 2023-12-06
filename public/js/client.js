@@ -1,8 +1,7 @@
-// public/js/client.js
-
 document.addEventListener('DOMContentLoaded', function () {
-    // Set up WebSocket connection to the server
-    const socket = new Primus();
+    // Update the server URL accordingly
+    const socket = new Primus('https://dev5-lab6-brendvandeneyndes-projects.vercel.app/');
+
 
     // Handle incoming updates from the server
     socket.on('data', function (data) {
